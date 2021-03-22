@@ -22,7 +22,7 @@ function App() {
     <div>
       <h1>Team Networking</h1> 
       <div>Search</div>
-      <PersonsTable teams={teams} />
+      <PersonsTable persons={persons} border={1} />
     </div>
   );
 }
