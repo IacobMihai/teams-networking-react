@@ -1,6 +1,6 @@
 
-export const PersonsTable = (props) => (
-    <table border={props.border}>
+export const PersonsTable = ({ persons, border }) => (
+    <table id="list" border={border}>
         <thead>
             <tr>
                 <th>FirstName</th>
