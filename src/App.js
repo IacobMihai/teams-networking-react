@@ -1,45 +1,63 @@
-
 import { Component } from 'react';
 import './App.css';
-import { PersonsTable } from "./PersonsTable"
-
-
+import { PersonsTable } from "./PersonsTable";
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      persons: []
+      persons: [],
+      date: new Date().toString()
     }
   }
-    
   componentDidMount() {
-      console.warn('mount');
-      
-      
-
-    this.load();
+    setInterval(() => {
+      this.setState({
+        date: new Date().toString()
+      })
+    }, 60000);
+    this.loadList();
   }
-
-  load() {
-      fetch("http://localhost:3000/teams-json")
-          .then(res => res.json())
-          .then(persons => {
-            this.setState({
-              persons: persons
-            });
-          });
+  loadList() {
+    fetch("http://localhost:3000/teams-json")
+      .then(res => res.json())
+      .then(persons => {
+        this.setState({
+          persons
+        });
+      });
+  }
+  add(person) {
+    fetch("http://localhost:3000/teams-json/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(person)
+    })
+      .then(res => res.json())
+      .then(r => {
+        console.warn(r);
+        if (r.success) {
+          this.loadList();
+        }
+      });
+  }
+  render() {
+    return (
+      <div>
+        <h1>Teams Networking</h1>
+        <div>Search</div>
+        <PersonsTable persons={this.state.persons} border={1} onSubmit={
+          person => {
+            this.add(person);
+          }
+        } />
+      </div>
+    );
+  }
 }
-
-    render() {
-      console.debug(this.state.persons);
-      return (
-        <div>
-          <h1>Team Networking</h1>
-          <div>Search</div>
-          <PersonsTable persons={this.state.persons} border={1} />
-        </div>
-      );
-    }
-}
-
 export default App;
+
+
+
+
